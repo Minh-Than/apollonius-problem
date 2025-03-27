@@ -11,6 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
+import java.util.*;
+import java.util.List;
 
 public class Main extends JPanel {
     static Point cursor = new Point();
@@ -329,12 +331,7 @@ public class Main extends JPanel {
             inHMCenter3 = Calc.getInternalHomotheticCenter(circle3, circle1);
         }
 
-        homothetic_lines: {
-            HMLine1 = new Segment(exHMCenter1, exHMCenter3);
-            HMLine2 = new Segment(exHMCenter1, inHMCenter2);
-            HMLine3 = new Segment(exHMCenter3, inHMCenter1);
-            HMLine4 = new Segment(exHMCenter2, inHMCenter1);
-        }
+        homothetic_lines: setupHomotheticLines();
 
         radical_axes_and_center: {
             radicalAxis1 = Calc.getRadicalAxis(circle1, circle2);
@@ -391,6 +388,29 @@ public class Main extends JPanel {
             apolloniusC4_1 = Calc.getCircle3Points(lineToRadical1_4.getP1(),lineToRadical2_4.getP2(),lineToRadical3_4.getP2());
             apolloniusC4_2 = Calc.getCircle3Points(lineToRadical1_4.getP2(),lineToRadical2_4.getP1(),lineToRadical3_4.getP1());
         }
+    }
+
+    public static void setupHomotheticLines() {
+        Map<Circle, List<Point>> map = new HashMap<>();
+        map.put(circle1, new ArrayList<>());
+        map.get(circle1).add(exHMCenter1);
+        map.get(circle1).add(inHMCenter1);
+
+        map.put(circle2, new ArrayList<>());
+        map.get(circle2).add(exHMCenter2);
+        map.get(circle2).add(inHMCenter2);
+
+        map.put(circle3, new ArrayList<>());
+        map.get(circle3).add(exHMCenter3);
+        map.get(circle3).add(inHMCenter3);
+
+        List<Map.Entry<Circle, List<Point>>> entryList = new ArrayList<>(map.entrySet());
+        entryList.sort(Map.Entry.comparingByKey(Comparator.comparingDouble(Circle::getR)));
+
+        HMLine1 = new Segment(entryList.get(0).getValue().get(0), entryList.get(1).getValue().get(0));
+        HMLine2 = new Segment(entryList.get(0).getValue().get(0), entryList.get(1).getValue().get(1));
+        HMLine3 = new Segment(entryList.get(1).getValue().get(0),  entryList.get(2).getValue().get(1));
+        HMLine4 = new Segment(entryList.get(1).getValue().get(1),  entryList.get(2).getValue().get(0));
     }
 
     public static void reset() {
