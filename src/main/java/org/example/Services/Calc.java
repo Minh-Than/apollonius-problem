@@ -1,4 +1,4 @@
-package org.example;
+package org.example.Services;
 
 import org.example.Geometrics.Circle;
 import org.example.Geometrics.Point;

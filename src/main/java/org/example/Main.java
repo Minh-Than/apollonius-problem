@@ -4,6 +4,7 @@ import org.example.Geometrics.Circle;
 import org.example.Geometrics.Point;
 import org.example.Geometrics.Segment;
 import org.example.Geometrics.StraightLine;
+import org.example.Services.Calc;
 import org.example.Services.Draw;
 
 import javax.swing.*;
