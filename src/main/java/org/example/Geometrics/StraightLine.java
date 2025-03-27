@@ -1,6 +1,4 @@
-package org.example;
-
-import java.awt.geom.Line2D;
+package org.example.Geometrics;
 
 public class StraightLine {
     private double a, b, c;
@@ -17,10 +15,10 @@ public class StraightLine {
         this.c = c;
     }
 
-    public StraightLine(Line2D.Double l) {
-        this.a = l.y2 - l.y1;
-        this.b = l.x1 - l.x2;
-        this.c = l.y1*l.x2 - l.x1*l.y2;
+    public StraightLine(Segment s) {
+        this.a = s.getY2() - s.getY1();
+        this.b = s.getX1() - s.getX2();
+        this.c = s.getY1()*s.getX2() - s.getX1()*s.getY2();
     }
 
     public double getA() { return a; }
@@ -28,8 +26,4 @@ public class StraightLine {
     public double getB() { return b; }
 
     public double getC() { return c; }
-
-    public static StraightLine getAsStraightLine(Line2D.Double l) {
-        return new StraightLine(l);
-    }
 }

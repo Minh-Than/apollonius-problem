@@ -1,39 +1,41 @@
 package org.example;
 
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+import org.example.Geometrics.Circle;
+import org.example.Geometrics.Point;
+import org.example.Geometrics.Segment;
+import org.example.Geometrics.StraightLine;
 
 public class Calc {
-    public static Point2D.Double getExternalHomotheticCenter(Circle c1, Circle c2) {
+    public static Point getExternalHomotheticCenter(Circle c1, Circle c2) {
         double x = (c2.getR() * c1.getX() - c1.getR() * c2.getX())
                 / (c2.getR() - c1.getR());
         double y = (c2.getR() * c1.getY() - c1.getR() * c2.getY())
                 / (c2.getR() - c1.getR());
-        return new Point2D.Double(x, y);
+        return new Point(x, y);
     }
 
-    public static Point2D.Double getInternalHomotheticCenter(Circle c1, Circle c2) {
+    public static Point getInternalHomotheticCenter(Circle c1, Circle c2) {
         double x = (c2.getR() * c1.getX() + c1.getR() * c2.getX())
                 / (c2.getR() + c1.getR());
         double y = (c2.getR() * c1.getY() + c1.getR() * c2.getY())
                 / (c2.getR() + c1.getR());
-        return new Point2D.Double(x, y);
+        return new Point(x, y);
     }
 
-    public static Point2D.Double getInversePole(Line2D.Double l, Circle c) {
-        Line2D.Double polarProjectionLine = new Line2D.Double(
+    public static Point getInversePole(Segment s, Circle c) {
+        Segment polarProjectionLine = new Segment(
                 c.getCenter(),
-                Calc.findProjection(StraightLine.getAsStraightLine(l), c.getCenter()));
+                Calc.findProjection(s.asStraightLine(), c.getCenter()));
 
-        Point2D.Double projectionMidPoint = Calc.midPoint(polarProjectionLine);
+        Point projectionMidPoint = Calc.midPoint(polarProjectionLine);
         Circle compassCircle = new Circle(
                 projectionMidPoint,
-                Calc.distance(c.getCenter(), projectionMidPoint));
+                projectionMidPoint.distance(c.getCenter()));
 
-        Line2D.Double intersection = Calc.getCirclesIntersection(compassCircle, c);
+        Segment intersection = Calc.getCirclesIntersection(compassCircle, c);
         return findIntersection(
-                StraightLine.getAsStraightLine(polarProjectionLine),
-                StraightLine.getAsStraightLine(intersection));
+                polarProjectionLine.asStraightLine(),
+                intersection.asStraightLine());
     }
 
     public static StraightLine getRadicalAxis(Circle c1, Circle c2) {
@@ -44,52 +46,47 @@ public class Calc {
         return new StraightLine(a, b, c);
     }
 
-    public static Circle getCircle3Points(Point2D.Double p1, Point2D.Double p2, Point2D.Double p3) {
-        Line2D.Double sen1 = new Line2D.Double(p1, p2);
-        Line2D.Double sen2 = new Line2D.Double(p2, p3);
-        Line2D.Double sen3 = new Line2D.Double(p3, p1);
+    public static Circle getCircle3Points(Point p1, Point p2, Point p3) {
+        Segment sen1 = new Segment(p1, p2);
+        Segment sen2 = new Segment(p2, p3);
+        Segment sen3 = new Segment(p3, p1);
 
         if (checkIfFlatAngle(sen1, sen2)) { return null; }
         if (checkIfFlatAngle(sen2, sen3)) { return null; }
         if (checkIfFlatAngle(sen3, sen1)) { return null; }
 
         StraightLine t1 = orthogonalize(
-                            StraightLine.getAsStraightLine(sen1),
+                            sen1.asStraightLine(),
                             internalDivisionRatio(
-                                new Point2D.Double(sen1.x1, sen1.y1),
-                                new Point2D.Double(sen1.x2, sen1.y2),
+                                new Point(sen1.getX1(), sen1.getY1()),
+                                new Point(sen1.getX2(), sen1.getY2()),
                             1.0, 1.0));
         StraightLine t2 = orthogonalize(
-                            StraightLine.getAsStraightLine(sen2),
+                            sen2.asStraightLine(),
                             internalDivisionRatio(
-                                new Point2D.Double(sen2.x1, sen2.y1),
-                                new Point2D.Double(sen2.x2, sen2.y2),
+                                new Point(sen2.getX1(), sen2.getY1()),
+                                new Point(sen2.getX2(), sen2.getY2()),
                             1.0, 1.0));
-        Point2D.Double intersectionPoint = findIntersection(t1, t2);
-        return new Circle(intersectionPoint, distance(p1, intersectionPoint));
+        Point intersectionPoint = findIntersection(t1, t2);
+        return new Circle(intersectionPoint, p1.distance(intersectionPoint));
     }
 
-    public static Circle getCircle3Points(Point2D p1, Point2D p2, Point2D p3) {
-        return getCircle3Points((Point2D.Double) p1, (Point2D.Double) p2, (Point2D.Double) p3);
+    private static boolean checkIfFlatAngle(Segment s1, Segment s2) {
+        return (Math.abs(angle(s1, s2) - 0.0) < 1E-6)
+                || (Math.abs(angle(s1, s2) - 180.0) < 1E-6)
+                || (Math.abs(angle(s1, s2) - 0.0) < 1E-6);
     }
 
-    private static boolean checkIfFlatAngle(Line2D.Double s1, Line2D.Double s2) {
-        if (Math.abs(angle(s1, s2) - 0.0) < 1E-6) return true;
-        if (Math.abs(angle(s1, s2) - 180.0) < 1E-6) return true;
-        if (Math.abs(angle(s1, s2) - 360.0) < 1E-6) return true;
-        return false;
-    }
-
-    public static double angle(Line2D.Double s1, Line2D.Double s2) {
-        Point2D.Double a = new Point2D.Double(s1.x1, s1.y1);
-        Point2D.Double b = new Point2D.Double(s1.x2, s1.y2);
-        Point2D.Double c = new Point2D.Double(s2.x1, s2.y1);
-        Point2D.Double d = new Point2D.Double(s2.x2, s2.y2);
+    public static double angle(Segment s1, Segment s2) {
+        Point a = new Point(s1.getX1(), s1.getY1());
+        Point b = new Point(s1.getX2(), s1.getY2());
+        Point c = new Point(s2.getX1(), s2.getY1());
+        Point d = new Point(s2.getX2(), s2.getY2());
 
         return angle_between_0_360(angle(c, d) - angle(a, b));
     }
 
-    public static double angle(Point2D.Double a, Point2D.Double b) {
+    public static double angle(Point a, Point b) {
         double ax, ay, bx, by, x, y, L, c, ret;
         ax = a.getX();
         ay = a.getY();
@@ -97,23 +94,17 @@ public class Calc {
         by = b.getY();
         x = bx - ax;
         y = by - ay;
+
         L = Math.sqrt(x * x + y * y);
-        if (L <= 0.0) {
-            return -10000.0;
-        }
+        if (L <= 0.0) return -10000.0;
         c = x / L;
-        if (c > 1.0) {
-            c = 1.0;
-        }
+        if (c > 1.0) c = 1.0;
 
         ret = Math.acos(c);
-        if (y < 0.0) {
-            ret = -ret;
-        }
+        if (y < 0.0) ret = -ret;
         ret = 180.0 * ret / Math.PI;
-        if (ret < 0) {
-            ret = ret + 360.0;
-        }
+        if (ret < 0) ret = ret + 360.0;
+
         return ret;
     }
 
@@ -123,19 +114,19 @@ public class Calc {
         return angle;
     }
 
-    public static Point2D.Double internalDivisionRatio(Point2D.Double a, Point2D.Double b, double d_internalDivisionRatio_s, double d_internalDivisionRatio_t) {
-        Point2D.Double r_point = new Point2D.Double(-10000.0, -10000.0);
-        if (distance(a, b) < 1E-6)  return r_point;
+    public static Point internalDivisionRatio(Point a, Point b, double d_internalDivisionRatio_s, double d_internalDivisionRatio_t) {
+        Point r_point = new Point(-10000.0, -10000.0);
+        if (a.distance(b) < 1E-6)  return r_point;
 
         if (d_internalDivisionRatio_s == 0.0) {
             if (d_internalDivisionRatio_t == 0.0) return r_point;
             return a;
         } else {
             if (d_internalDivisionRatio_t == 0.0) return b;
-            Line2D.Double s_ab = new Line2D.Double(a, b);
+            Segment s_ab = new Segment(a, b);
             double nx = (d_internalDivisionRatio_t * s_ab.getX1() + d_internalDivisionRatio_s * s_ab.getX2()) / (d_internalDivisionRatio_s + d_internalDivisionRatio_t);
             double ny = (d_internalDivisionRatio_t * s_ab.getY1() + d_internalDivisionRatio_s * s_ab.getY2()) / (d_internalDivisionRatio_s + d_internalDivisionRatio_t);
-            return new Point2D.Double(nx, ny);
+            return new Point(nx, ny);
 
         }
     }
@@ -155,17 +146,17 @@ public class Calc {
         return new StraightLine(a, b, c);
     }
 
-    public static Line2D.Double getCirclesIntersection(Circle c1, Circle c2) {
+    public static Segment getCirclesIntersection(Circle c1, Circle c2) {
         StraightLine t0 = getCirclesIntersectionSL(c1, c2);
         StraightLine t1 = new StraightLine(
                 c2.getY() - c1.getY(), c1.getX() - c2.getX(),
                 c1.getY()*c2.getX() - c1.getX()*c2.getY());
-        Point2D.Double intersection_t0t1 = findIntersection(t0, t1);
+        Point intersection_t0t1 = findIntersection(t0, t1);
 
         double length_a = calculateDistance(t0, c1.getCenter());
         double length_b = Math.sqrt(c1.getR() * c1.getR() - length_a * length_a);
 
-        return new Line2D.Double(
+        return new Segment(
                 intersection_t0t1.getX() + t0.getB() * length_b / Math.sqrt(t0.getB() * t0.getB() + t0.getA() * t0.getA()),
                 intersection_t0t1.getY() - t0.getA() * length_b / Math.sqrt(t0.getB() * t0.getB() + t0.getA() * t0.getA()),
                 intersection_t0t1.getX() - t0.getB() * length_b / Math.sqrt(t0.getB() * t0.getB() + t0.getA() * t0.getA()),
@@ -173,12 +164,12 @@ public class Calc {
         );
     }
 
-    public static Line2D.Double getCircleStraightlineIntersection(Circle c, StraightLine l) {
-        Point2D.Double kouten_t0t1 = findProjection(l, c.getCenter());
+    public static Segment getCircleStraightlineIntersection(Circle c, StraightLine l) {
+        Point kouten_t0t1 = findProjection(l, c.getCenter());
         double length_a = calculateDistance(l, c.getCenter());
         double length_b = Math.sqrt(c.getR() * c.getR() - length_a * length_a);
 
-        return new Line2D.Double(
+        return new Segment(
                 kouten_t0t1.getX() + l.getB() * length_b / Math.sqrt(l.getB() * l.getB() + l.getA() * l.getA()),
                 kouten_t0t1.getY() - l.getA() * length_b / Math.sqrt(l.getB() * l.getB() + l.getA() * l.getA()),
                 kouten_t0t1.getX() - l.getB() * length_b / Math.sqrt(l.getB() * l.getB() + l.getA() * l.getA()),
@@ -186,35 +177,30 @@ public class Calc {
         );
     }
 
-    public static Line2D.Double getCircleStraightlineIntersection(Circle c, Line2D.Double l) {
-        return getCircleStraightlineIntersection(c, StraightLine.getAsStraightLine(l));
+    public static Segment getCircleStraightlineIntersection(Circle c, Segment s) {
+        return getCircleStraightlineIntersection(c, s.asStraightLine());
     }
 
-    public static double calculateDistance(StraightLine s, Point2D.Double p) {
+    public static double calculateDistance(StraightLine s, Point p) {
         double x = p.getX();
         double y = p.getY();
         return Math.abs((s.getA() * x + s.getB() * y + s.getC())
                 / Math.sqrt(s.getA() * s.getA() + s.getB() * s.getB()));
     }
 
-    public static double distance(Point2D.Double p1, Point2D.Double p2) {
-        double x1 = p2.getX() - p1.getX(), y1 = p2.getY() - p1.getY();
-        return Math.sqrt(x1 * x1 + y1 * y1);
-    }
-
-    public static Point2D.Double findProjection(StraightLine l, Point2D.Double p) {
+    public static Point findProjection(StraightLine l, Point p) {
         StraightLine t1 = orthogonalize(new StraightLine(l.getA(), l.getB(), l.getC()), p);
         return findIntersection(l, t1);
     }
 
-    public static Point2D.Double findIntersection(StraightLine l1, StraightLine l2) {
+    public static Point findIntersection(StraightLine l1, StraightLine l2) {
         double a1 = l1.getA(), b1 = l1.getB(), c1 = l1.getC();
         double a2 = l2.getA(), b2 = l2.getB(), c2 = l2.getC();
 
-        return new Point2D.Double((b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1), (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1));
+        return new Point((b1 * c2 - b2 * c1) / (a1 * b2 - a2 * b1), (a2 * c1 - a1 * c2) / (a1 * b2 - a2 * b1));
     }
 
-    public static StraightLine orthogonalize(StraightLine l, Point2D.Double p) {
+    public static StraightLine orthogonalize(StraightLine l, Point p) {
         double e;
         double x = p.getX();
         double y = p.getY();
@@ -225,7 +211,7 @@ public class Calc {
         return new StraightLine(a, b, c);
     }
 
-    public static Point2D.Double midPoint (Line2D.Double s) {
-        return new Point2D.Double((s.x2 + s.x1)/2.0, (s.y2 + s.y1)/2.0);
+    public static Point midPoint (Segment s) {
+        return new Point((s.getX2() + s.getX1())/2.0, (s.getY2() + s.getY1())/2.0);
     }
 }
