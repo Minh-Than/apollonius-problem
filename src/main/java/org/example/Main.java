@@ -350,12 +350,9 @@ public class Main extends JPanel {
             inversePoleC1_2 = Calc.getInversePole(HMLine2, circle1);
             inversePoleC2_2 = Calc.getInversePole(HMLine2, circle2);
             inversePoleC3_2 = Calc.getInversePole(HMLine2, circle3);
-            lineToRadical1_2 = new Line2D.Double(inversePoleC1_2, radicalCenter);
-            lineToRadical1_2 = Calc.getCircleStraightlineIntersection(circle1, lineToRadical1_2);
-            lineToRadical2_2 = new Line2D.Double(inversePoleC2_2, radicalCenter);
-            lineToRadical2_2 = Calc.getCircleStraightlineIntersection(circle2, lineToRadical2_2);
-            lineToRadical3_2 = new Line2D.Double(inversePoleC3_2, radicalCenter);
-            lineToRadical3_2 = Calc.getCircleStraightlineIntersection(circle3, lineToRadical3_2);
+            lineToRadical1_2 = Calc.getCircleStraightlineIntersection(circle1, new Line2D.Double(inversePoleC1_2, radicalCenter));
+            lineToRadical2_2 = Calc.getCircleStraightlineIntersection(circle2, new Line2D.Double(inversePoleC2_2, radicalCenter));
+            lineToRadical3_2 = Calc.getCircleStraightlineIntersection(circle3, new Line2D.Double(inversePoleC3_2, radicalCenter));
         }
 
         inverse_poles_3: {
