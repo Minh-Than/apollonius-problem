@@ -187,6 +187,7 @@ public class Main extends JPanel {
 
     public static void setListeners(JPanel mainPanel) {
         mainPanel.addMouseWheelListener(e -> {
+            if (e.getWheelRotation() == 0) return;
             int unitWheelRotation = e.getWheelRotation() / Math.abs(e.getWheelRotation());
             double scale = Math.abs(0.1 - unitWheelRotation);
 
