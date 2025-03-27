@@ -250,6 +250,11 @@ public class Main extends JPanel {
             @Override
             public void mouseMoved(MouseEvent e) {
                 cursor = new Point(e.getX(), e.getY());
+                if (cursor.distance(circle1.getCenter()) < circle1.getR()
+                        || cursor.distance(circle2.getCenter()) < circle2.getR()
+                        || cursor.distance(circle3.getCenter()) < circle3.getR()) {
+                    mainPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                } else mainPanel.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
                 mainPanel.repaint();
             }
         });

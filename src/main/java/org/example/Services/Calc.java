@@ -74,7 +74,7 @@ public class Calc {
     private static boolean checkIfFlatAngle(Segment s1, Segment s2) {
         return (Math.abs(angle(s1, s2) - 0.0) < 1E-6)
                 || (Math.abs(angle(s1, s2) - 180.0) < 1E-6)
-                || (Math.abs(angle(s1, s2) - 0.0) < 1E-6);
+                || (Math.abs(angle(s1, s2) - 360.0) < 1E-6);
     }
 
     public static double angle(Segment s1, Segment s2) {
