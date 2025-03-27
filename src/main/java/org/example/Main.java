@@ -60,7 +60,7 @@ public class Main extends JPanel {
 
         draw3Circles(g2);
         drawHomotheticCenters(g2);
-        drawHomotheticLines(g2);
+//        drawHomotheticLines(g2);
         drawRadicalCenter(g2);
         drawInversePoles(g2);
         drawConnectors(g2);
@@ -336,7 +336,12 @@ public class Main extends JPanel {
             inHMCenter3 = Calc.getInternalHomotheticCenter(circle3, circle1);
         }
 
-        homothetic_lines: setupHomotheticLines();
+        homothetic_lines: {
+            HMLine1 = new Segment(exHMCenter1, exHMCenter3);
+            HMLine2 = new Segment(exHMCenter1, inHMCenter2);
+            HMLine3 = new Segment(exHMCenter3, inHMCenter1);
+            HMLine4 = new Segment(exHMCenter2, inHMCenter1);
+        }
 
         radical_axes_and_center: {
             radicalAxis1 = Calc.getRadicalAxis(circle1, circle2);
