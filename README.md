@@ -7,7 +7,7 @@ Features:
 - Drag and scale the 3 starting circles (with mouse and mouse wheel respectively)
 - Show/hide other properties used to construct the resultant circles
 
-Issue:
+Issues:
 - [ ] Homothetic lines straight up breaks when changing the size order
 - [ ] During moving a circle, cursor might transfer to another circle if the cursor gets close enough B's center
 - [ ] Very quick cursor movement can skip the circle dragging 
