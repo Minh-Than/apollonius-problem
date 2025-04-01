@@ -23,33 +23,33 @@ public class Main extends JPanel {
 
     static Point exHMCenter1, inHMCenter1, exHMCenter2, inHMCenter2, exHMCenter3, inHMCenter3;
     static Segment HMLine1, HMLine2, HMLine3, HMLine4;
-    static boolean showHomothetic = false;
+    static boolean showHomothetic;
 
     static StraightLine radicalAxis1 = new StraightLine();
     static StraightLine radicalAxis2 = new StraightLine();
     static Point radicalCenter;
-    static boolean showRadical = true;
+    static boolean showRadical;
 
     static Point inversePoleC1_1, inversePoleC2_1, inversePoleC3_1;
     static Point inversePoleC1_2, inversePoleC2_2, inversePoleC3_2;
     static Point inversePoleC1_3, inversePoleC2_3, inversePoleC3_3;
     static Point inversePoleC1_4, inversePoleC2_4, inversePoleC3_4;
-    static boolean showInversePoles = false;
+    static boolean showInversePoles;
 
     static Segment lineToRadical1_1, lineToRadical2_1, lineToRadical3_1;
     static Segment lineToRadical1_2, lineToRadical2_2, lineToRadical3_2;
     static Segment lineToRadical1_3, lineToRadical2_3, lineToRadical3_3;
     static Segment lineToRadical1_4, lineToRadical2_4, lineToRadical3_4;
-    static boolean showConnectors = false;
+    static boolean showConnectors;
 
     static Circle apolloniusC1_1, apolloniusC1_2;
     static Circle apolloniusC2_1, apolloniusC2_2;
     static Circle apolloniusC3_1, apolloniusC3_2;
     static Circle apolloniusC4_1, apolloniusC4_2;
-    static boolean showApolloniusCircles1 = true;
-    static boolean showApolloniusCircles2 = true;
-    static boolean showApolloniusCircles3 = true;
-    static boolean showApolloniusCircles4 = true;
+    static boolean showApolloniusCircles1;
+    static boolean showApolloniusCircles2;
+    static boolean showApolloniusCircles3;
+    static boolean showApolloniusCircles4;
 
     @Override
     public void paintComponent(Graphics g) {
@@ -77,14 +77,14 @@ public class Main extends JPanel {
     public void drawHomotheticCenters(Graphics2D g2) {
         if (!showHomothetic) return;
         g2.setColor(Color.LIGHT_GRAY);
-        Draw.drawPoint(g2, exHMCenter1, 4);
-        Draw.drawPoint(g2, inHMCenter1, 4);
+        Draw.drawPoint(g2, exHMCenter1, 6);
+        Draw.drawPoint(g2, inHMCenter1, 6);
 
-        Draw.drawPoint(g2, exHMCenter2, 4);
-        Draw.drawPoint(g2, inHMCenter2, 4);
+        Draw.drawPoint(g2, exHMCenter2, 6);
+        Draw.drawPoint(g2, inHMCenter2, 6);
 
-        Draw.drawPoint(g2, exHMCenter3, 4);
-        Draw.drawPoint(g2, inHMCenter3, 4);
+        Draw.drawPoint(g2, exHMCenter3, 6);
+        Draw.drawPoint(g2, inHMCenter3, 6);
     }
 
     public void drawHomotheticLines(Graphics2D g2) {
@@ -175,6 +175,9 @@ public class Main extends JPanel {
     }
 
     public static void main(String[] args) {
+        reset();
+        setValues();
+
         JFrame frame = new JFrame("Apollonius' Problem");
         frame.setSize(900, 800);
         frame.setResizable(false);
@@ -188,8 +191,6 @@ public class Main extends JPanel {
         frame.add(topPanel, BorderLayout.NORTH);
 
         frame.setVisible(true);
-
-        setValues();
     }
 
     public static void setListeners(JPanel mainPanel) {
@@ -427,5 +428,13 @@ public class Main extends JPanel {
         circle1 = new Circle(new Point(440, 440), 38);
         circle2 = new Circle(new Point(300, 395), 58);
         circle3 = new Circle(new Point(448, 320), 22);
+        showHomothetic = false;
+        showRadical = true;
+        showInversePoles = false;
+        showConnectors = false;
+        showApolloniusCircles1 = true;
+        showApolloniusCircles2 = true;
+        showApolloniusCircles3 = true;
+        showApolloniusCircles4 = true;
     }
 }
