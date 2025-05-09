@@ -23,19 +23,37 @@ public class Calc {
     }
 
     public static Point getInversePole(Segment s, Circle c) {
-        Segment polarProjectionLine = new Segment(
-                c.getCenter(),
-                Calc.findProjection(s.asStraightLine(), c.getCenter()));
+        if(isSegmentIntersectingCircle(c, s)) {
+            // Case 1: polar segment intersecting inversion circle
+            Segment intersectingSegment = getCircleStraightlineIntersection(c, s);
+            double dx = intersectingSegment.getX1() - c.getX();
+            double dy = intersectingSegment.getY1() - c.getY();
 
-        Point projectionMidPoint = Calc.midPoint(polarProjectionLine);
-        Circle compassCircle = new Circle(
-                projectionMidPoint,
-                projectionMidPoint.distance(c.getCenter()));
+            double tangentX = -dy;
+            double tangentY = dx;
 
-        Segment intersection = Calc.getCirclesIntersection(compassCircle, c);
-        return findIntersection(
-                polarProjectionLine.asStraightLine(),
-                intersection.asStraightLine());
+            Point tangentP1 = new Point(intersectingSegment.getX1() - tangentX, intersectingSegment.getY1() - tangentY);
+            Point tangentP2 = new Point(intersectingSegment.getX1() + tangentX, intersectingSegment.getY1() + tangentY);
+            Segment tangent = new Segment(tangentP1, tangentP2);
+
+            Segment projectionSegment = new Segment(c.getCenter(), findProjection(s.asStraightLine(), c.getCenter()));
+            return findIntersection(tangent.asStraightLine(), projectionSegment.asStraightLine());
+        } else {
+            // Case 2: polar segment outside of inversion circle
+            Segment polarProjectionLine = new Segment(
+                    c.getCenter(),
+                    Calc.findProjection(s.asStraightLine(), c.getCenter()));
+
+            Point projectionMidPoint = Calc.midPoint(polarProjectionLine);
+            Circle compassCircle = new Circle(
+                    projectionMidPoint,
+                    projectionMidPoint.distance(c.getCenter()));
+
+            Segment intersection = Calc.getCirclesIntersection(compassCircle, c);
+            return findIntersection(
+                    polarProjectionLine.asStraightLine(),
+                    intersection.asStraightLine());
+        }
     }
 
     public static StraightLine getRadicalAxis(Circle c1, Circle c2) {
@@ -179,6 +197,10 @@ public class Calc {
 
     public static Segment getCircleStraightlineIntersection(Circle c, Segment s) {
         return getCircleStraightlineIntersection(c, s.asStraightLine());
+    }
+
+    public static boolean isSegmentIntersectingCircle(Circle c, Segment s) {
+        return c.getR() >= calculateDistance(s.asStraightLine(), c.getCenter());
     }
 
     public static double calculateDistance(StraightLine s, Point p) {

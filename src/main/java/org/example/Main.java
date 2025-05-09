@@ -17,16 +17,13 @@ import java.util.List;
 public class Main extends JPanel {
     static Point cursor = new Point();
 
-    static Circle circle1 = new Circle(new Point(440, 440), 38);
-    static Circle circle2 = new Circle(new Point(300, 395), 58);
-    static Circle circle3 = new Circle(new Point(448, 320), 22);
+    static Circle circle1, circle2, circle3;
 
     static Point exHMCenter1, inHMCenter1, exHMCenter2, inHMCenter2, exHMCenter3, inHMCenter3;
     static Segment HMLine1, HMLine2, HMLine3, HMLine4;
     static boolean showHomothetic;
 
-    static StraightLine radicalAxis1 = new StraightLine();
-    static StraightLine radicalAxis2 = new StraightLine();
+    static StraightLine radicalAxis1, radicalAxis2;
     static Point radicalCenter;
     static boolean showRadical;
 
@@ -428,6 +425,9 @@ public class Main extends JPanel {
         circle1 = new Circle(new Point(440, 440), 38);
         circle2 = new Circle(new Point(300, 395), 58);
         circle3 = new Circle(new Point(448, 320), 22);
+        radicalAxis1 = new StraightLine();
+        radicalAxis2 = new StraightLine();
+
         showHomothetic = false;
         showRadical = true;
         showInversePoles = false;
