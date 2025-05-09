@@ -10,8 +10,7 @@ Features:
 Issues:
 - [ ] Homothetic lines straight up breaks when changing the size order
 - [ ] During moving a circle, cursor might transfer to another circle if the cursor gets close enough B's center
-- [ ] Very quick cursor movement can skip the circle dragging 
-- [ ] In some cases, an Apollonius circle ends up inside the starting circles
-- [ ] Inversion poles aren't being shown in places where they need to show up
+- [ ] Very quick cursor movement can skip the circle dragging
+- [x] Inversion poles aren't being shown in places where they need to show up
 
 Credits to [Wolfram](https://mathworld.wolfram.com/ApolloniusProblem.html) for the steps needed to write this.
