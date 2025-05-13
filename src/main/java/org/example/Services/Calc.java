@@ -211,7 +211,7 @@ public class Calc {
     }
 
     public static Point findProjection(StraightLine l, Point p) {
-        StraightLine t1 = orthogonalize(new StraightLine(l.getA(), l.getB(), l.getC()), p);
+        StraightLine t1 = orthogonalize(l, p);
         return findIntersection(l, t1);
     }
 
